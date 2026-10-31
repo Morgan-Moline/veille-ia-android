@@ -258,6 +258,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         IconButton(onPressed: _loading ? null : () => _refresh(), icon: const Icon(Icons.refresh_rounded)),
       ]))),
       SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 12), child: _buildHero())),
+      SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.fromLTRB(20, 0, 20, 12), child: Row(children: [
+        Expanded(child: _statCard('Non lus', _articles.where((a) => !_read.contains(a.link)).length.toString(), Icons.mark_email_unread_outlined, const Color(0xFF2468B4))),
+        const SizedBox(width: 10),
+        Expanded(child: _statCard('Favoris', _favorites.length.toString(), Icons.bookmark_border, const Color(0xFFF28C28))),
+      ]))),
       SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 20), child: TextField(
         controller: _searchController,
         onChanged: (v) => setState(() => _search = v),
@@ -302,6 +307,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ]));
   }
 
+  Widget _statCard(String label, String value, IconData icon, Color color) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
+    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+    child: Row(children: [
+      Icon(icon, color: color, size: 19),
+      const SizedBox(width: 9),
+      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(value, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: Color(0xFF16324F))),
+        Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF7890A5))),
+      ])),
+    ]),
+  );
+
   Widget _categoryChip(String label, Color color) {
     final selected = _category == label;
     return Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(
@@ -334,7 +352,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           const SizedBox(height: 4),
           Text(article.title, maxLines: 3, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15, height: 1.25, fontWeight: FontWeight.w800, color: isRead ? const Color(0xFF778899) : const Color(0xFF16324F))),
           const SizedBox(height: 8),
-          Text(article.summary.isNotEmpty ? article.summary : article.description, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, height: 1.35, color: Colors.blueGrey.shade600)),
+          if (article.summary.isNotEmpty)
+            Text(article.summary, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, height: 1.35, color: Colors.blueGrey.shade600))
+          else ...[
+            Text(article.description, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 12, height: 1.35, color: Colors.blueGrey.shade600)),
+            const SizedBox(height: 5),
+            const Row(children: [Icon(Icons.auto_awesome, size: 12, color: Color(0xFF9AAABD)), SizedBox(width: 5), Text('Résumé IA en attente', style: TextStyle(fontSize: 10, color: Color(0xFF9AAABD), fontWeight: FontWeight.w600))]),
+          ],
           const SizedBox(height: 8),
           Row(children: [
             Expanded(child: Text(article.source, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Color(0xFF8496A7)))),
