@@ -11,7 +11,7 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   Map<String, List<dynamic>> _topics = {};
-  String? _selectedTopic;
+  Set<String> _selectedTopics = {};
   List<Map<String, dynamic>> _session = [];
   int _index = 0;
   int _score = 0;
@@ -28,15 +28,15 @@ class _QuizScreenState extends State<QuizScreen> {
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final topics = (json['topics'] as Map<String, dynamic>).map((key, value) => MapEntry(key, List<dynamic>.from(value as List)));
       if (!mounted) return;
-      setState(() { _topics = topics; _selectedTopic = topics.keys.first; _loading = false; });
+      setState(() { _topics = topics; _selectedTopics = topics.keys.toSet(); _loading = false; });
     } catch (_) {
       if (mounted) setState(() => _loading = false);
     }
   }
 
   void _start() {
-    final pool = _topics[_selectedTopic] ?? _topics.values.expand((e) => e).toList();
-    final questions = pool.map((q) => Map<String, dynamic>.from(q as Map)).toList()..shuffle(Random());
+    final pool = _selectedTopics.expand((topic) => (_topics[topic] ?? []).map((q) => {...Map<String, dynamic>.from(q as Map), '_topic': topic})).toList();
+    final questions = pool..shuffle(Random());
     setState(() { _session = questions.take(min(10, questions.length)).toList(); _index = 0; _score = 0; _answer = null; _finished = false; });
   }
 
@@ -64,7 +64,7 @@ class _QuizScreenState extends State<QuizScreen> {
       const SizedBox(height: 10),
       ClipRRect(borderRadius: BorderRadius.circular(8), child: LinearProgressIndicator(value: (_index + 1) / _session.length, minHeight: 7, color: const Color(0xFF174A91), backgroundColor: const Color(0xFFDCE8F4))),
       const SizedBox(height: 24),
-      Text(_selectedTopic ?? 'BTS CG', style: const TextStyle(color: Color(0xFF174A91), fontWeight: FontWeight.w800)),
+      Text((q['_topic'] ?? 'BTS CG').toString(), style: const TextStyle(color: Color(0xFF174A91), fontWeight: FontWeight.w800)),
       const SizedBox(height: 10),
       Text((q['question'] ?? '').toString(), style: const TextStyle(fontSize: 22, height: 1.25, fontWeight: FontWeight.w900, color: Color(0xFF16324F))),
       const SizedBox(height: 22),
@@ -98,9 +98,16 @@ class _QuizScreenState extends State<QuizScreen> {
     const SizedBox(height: 24),
     const Text('Choisis ton thème', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF16324F))),
     const SizedBox(height: 10),
-    DropdownButtonFormField<String>(value: _selectedTopic, decoration: const InputDecoration(labelText: 'Thème de révision'), items: _topics.keys.map((t) => DropdownMenuItem(value: t, child: Text('$t  •  ${_topics[t]!.length} questions'))).toList(), onChanged: (v) => setState(() => _selectedTopic = v)),
+    Wrap(spacing: 8, runSpacing: 8, children: _topics.entries.map((entry) => FilterChip(
+      label: Text(entry.key),
+      selected: _selectedTopics.contains(entry.key),
+      selectedColor: const Color(0xFF174A91).withOpacity(.12),
+      onSelected: (selected) => setState(() {
+        if (selected) { _selectedTopics.add(entry.key); } else { _selectedTopics.remove(entry.key); }
+      }),
+    )).toList()),
     const SizedBox(height: 18),
-    FilledButton.icon(onPressed: _start, icon: const Icon(Icons.play_arrow), label: const Text('Démarrer une session de 10 questions'), style: FilledButton.styleFrom(backgroundColor: const Color(0xFF174A91), minimumSize: const Size.fromHeight(52))),
+    FilledButton.icon(onPressed: _selectedTopics.isEmpty ? null : _start, icon: const Icon(Icons.play_arrow), label: const Text('Démarrer une session de 10 questions'), style: FilledButton.styleFrom(backgroundColor: const Color(0xFF174A91), minimumSize: const Size.fromHeight(52))),
   ]);
 
   Widget _result() => Center(child: Padding(padding: const EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
