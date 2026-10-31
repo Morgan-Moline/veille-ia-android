@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/category.dart';
@@ -68,29 +69,45 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!silent && _articles.isEmpty && mounted) setState(() => _loading = true);
     try {
       final data = await VeilleService.fetchData();
-      final raw = data['articles'] as List;
-      final unique = <String, VeilleArticle>{};
-      for (final item in raw) {
-        if (item is! Map) continue;
-        final article = VeilleArticle.fromJson(Map<String, dynamic>.from(item));
-        if (article.link.isNotEmpty) unique[article.link] = article;
-      }
-      final result = unique.values.toList()
-        ..sort((a, b) => (b.publishedAt ?? DateTime(2000)).compareTo(a.publishedAt ?? DateTime(2000)));
-      if (!mounted) return;
-      setState(() {
-        _articles = result;
-        _updatedAt = DateTime.tryParse((data['updated_at'] ?? '').toString());
-        _message = null;
-        _loading = false;
-      });
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('veille-cache-data', jsonEncode(data));
+      _applyData(data);
     } catch (_) {
+      // Si le réseau est indisponible, on conserve l'accès aux derniers articles téléchargés.
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final cached = prefs.getString('veille-cache-data');
+        if (cached != null) {
+          _applyData(jsonDecode(cached) as Map<String, dynamic>, offline: true);
+          return;
+        }
+      } catch (_) {}
       if (!mounted) return;
       setState(() {
         _loading = false;
         if (_articles.isEmpty) _message = 'Impossible de récupérer les actualités. Vérifie ta connexion puis réessaie.';
       });
     }
+  }
+
+  void _applyData(Map<String, dynamic> data, {bool offline = false}) {
+    final raw = data['articles'];
+    if (raw is! List) throw const FormatException('Liste d’articles absente.');
+    final unique = <String, VeilleArticle>{};
+    for (final item in raw) {
+      if (item is! Map) continue;
+      final article = VeilleArticle.fromJson(Map<String, dynamic>.from(item));
+      if (article.link.isNotEmpty) unique[article.link] = article;
+    }
+    final result = unique.values.toList()
+      ..sort((a, b) => (b.publishedAt ?? DateTime(2000)).compareTo(a.publishedAt ?? DateTime(2000)));
+    if (!mounted) return;
+    setState(() {
+      _articles = result;
+      _updatedAt = DateTime.tryParse((data['updated_at'] ?? '').toString());
+      _message = offline ? 'Mode hors connexion : derniers articles enregistrés.' : null;
+      _loading = false;
+    });
   }
 
   void _toggleFavorite(VeilleArticle article) {
