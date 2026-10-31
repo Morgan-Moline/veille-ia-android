@@ -292,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final images = selected == null ? veilleCategories : [selected];
     return Container(height: 142, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(22)), clipBehavior: Clip.antiAlias, child: Stack(children: [
       Positioned.fill(child: Row(children: images.map((c) => Expanded(child: CategoryArtwork(imageKey: c.imageKey, fit: BoxFit.cover))).toList())),
-      Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: [color.withOpacity(.94), color.withOpacity(.55), color.withOpacity(.18)])))),
+      Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: [color.withValues(alpha: .94), color.withValues(alpha: .55), color.withValues(alpha: .18)])))),
       Padding(padding: const EdgeInsets.all(18), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
         Text(selected?.eyebrow ?? 'COMPTABILITÉ • ÉTUDES • SECTEUR PRO', style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1)),
         const SizedBox(height: 6),
@@ -319,7 +319,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return Padding(padding: const EdgeInsets.only(right: 8), child: ChoiceChip(
       label: Text(label == 'Toutes' ? label : _categoryFor(label).shortName),
       selected: selected,
-      selectedColor: color.withOpacity(.14),
+      selectedColor: color.withValues(alpha: .14),
       side: BorderSide(color: selected ? color : Colors.transparent),
       onSelected: (_) => setState(() => _category = label),
       labelStyle: TextStyle(color: selected ? color : const Color(0xFF60758A), fontWeight: FontWeight.w700),
@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: category.color.withOpacity(.1), borderRadius: BorderRadius.circular(8)), child: Text(category.shortName, style: TextStyle(color: category.color, fontSize: 10, fontWeight: FontWeight.w800))),
+            Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: category.color.withValues(alpha: .1), borderRadius: BorderRadius.circular(8)), child: Text(category.shortName, style: TextStyle(color: category.color, fontSize: 10, fontWeight: FontWeight.w800))),
             const Spacer(),
             if (isRead) const Icon(Icons.check_circle, color: Color(0xFF9AAAB8), size: 15),
             IconButton(visualDensity: VisualDensity.compact, padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 34, minHeight: 34), onPressed: () => _toggleFavorite(article), icon: Icon(favorite ? Icons.bookmark : Icons.bookmark_border, color: favorite ? category.color : Colors.blueGrey)),
