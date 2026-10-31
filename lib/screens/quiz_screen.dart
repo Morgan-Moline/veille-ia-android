@@ -60,7 +60,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final answers = List<String>.from(q['answers'] as List);
     final correct = q['correctAnswer'] as int;
     return ListView(padding: const EdgeInsets.fromLTRB(20, 28, 20, 28), children: [
-      Row(children: [const Expanded(child: Text('RÉVISIONS BTS CG', style: TextStyle(fontSize: 11, letterSpacing: 1.3, fontWeight: FontWeight.w900, color: Color(0xFF64809B))), Text('${_index + 1} / ${_session.length}', style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF174A91)))]),
+      Row(children: [const Expanded(child: Text('RÉVISIONS BTS CG', style: TextStyle(fontSize: 11, letterSpacing: 1.3, fontWeight: FontWeight.w900, color: Color(0xFF64809B)))), Text('${_index + 1} / ${_session.length}', style: const TextStyle(fontWeight: FontWeight.w800, color: Color(0xFF174A91)))]),
       const SizedBox(height: 10),
       ClipRRect(borderRadius: BorderRadius.circular(8), child: LinearProgressIndicator(value: (_index + 1) / _session.length, minHeight: 7, color: const Color(0xFF174A91), backgroundColor: const Color(0xFFDCE8F4))),
       const SizedBox(height: 24),
