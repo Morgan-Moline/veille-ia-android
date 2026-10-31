@@ -12,7 +12,7 @@ class ArticleDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final category = veilleCategories.where((c) => c.name == article.category).firstOrNull ?? veilleCategories.first;
+    final category = veilleCategories.firstWhere((c) => c.name == article.category, orElse: () => veilleCategories.first);
     final date = article.publishedAt == null ? 'Date non disponible' : MaterialLocalizations.of(context).formatMediumDate(article.publishedAt!.toLocal());
     return Scaffold(
       appBar: AppBar(title: const Text('Article'), actions: [IconButton(onPressed: onFavorite, icon: Icon(isFavorite ? Icons.bookmark : Icons.bookmark_border, color: category.color))]),
