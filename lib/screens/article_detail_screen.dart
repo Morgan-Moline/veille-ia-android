@@ -4,18 +4,32 @@ import '../models/veille_article.dart';
 import '../models/category.dart';
 import '../widgets/category_artwork.dart';
 
-class ArticleDetailScreen extends StatelessWidget {
+class ArticleDetailScreen extends StatefulWidget {
   const ArticleDetailScreen({super.key, required this.article, required this.isFavorite, required this.onFavorite});
   final VeilleArticle article;
   final bool isFavorite;
   final VoidCallback onFavorite;
 
   @override
+  State<ArticleDetailScreen> createState() => _ArticleDetailScreenState();
+}
+
+class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
+  late bool _favorite;
+
+  @override
+  void initState() {
+    super.initState();
+    _favorite = widget.isFavorite;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final article = widget.article;
     final category = veilleCategories.firstWhere((c) => c.name == article.category, orElse: () => veilleCategories.first);
     final date = article.publishedAt == null ? 'Date non disponible' : MaterialLocalizations.of(context).formatMediumDate(article.publishedAt!.toLocal());
     return Scaffold(
-      appBar: AppBar(title: const Text('Article'), actions: [IconButton(onPressed: onFavorite, icon: Icon(isFavorite ? Icons.bookmark : Icons.bookmark_border, color: category.color))]),
+      appBar: AppBar(title: const Text('Article'), actions: [IconButton(onPressed: () { setState(() => _favorite = !_favorite); widget.onFavorite(); }, icon: Icon(_favorite ? Icons.bookmark : Icons.bookmark_border, color: category.color))]),
       body: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 32), children: [
         Container(height: 150, decoration: BoxDecoration(color: category.color.withOpacity(.08), borderRadius: BorderRadius.circular(22)), clipBehavior: Clip.antiAlias, child: Stack(fit: StackFit.expand, children: [
           CategoryArtwork(imageKey: category.imageKey, fit: BoxFit.cover),
@@ -34,6 +48,14 @@ class ArticleDetailScreen extends StatelessWidget {
           const SizedBox(height: 10),
           Text(article.summary, style: const TextStyle(fontSize: 16, height: 1.55)),
         ],
+        if (article.summary.trim().isEmpty) ...[
+          const SizedBox(height: 22),
+          Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: category.color.withOpacity(.08), borderRadius: BorderRadius.circular(16)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Icon(Icons.auto_awesome, color: category.color),
+            const SizedBox(width: 10),
+            const Expanded(child: Text('Résumé IA en attente. Il sera ajouté lors de la prochaine actualisation de la veille.', style: TextStyle(height: 1.4))),
+          ])),
+        ],
         if (article.description.trim().isNotEmpty) ...[
           const SizedBox(height: 22),
           const Text('À propos', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
@@ -42,6 +64,8 @@ class ArticleDetailScreen extends StatelessWidget {
         ],
         const SizedBox(height: 28),
         FilledButton.icon(style: FilledButton.styleFrom(backgroundColor: category.color, minimumSize: const Size.fromHeight(52)), onPressed: () => launchUrl(Uri.parse(article.link), mode: LaunchMode.externalApplication), icon: const Icon(Icons.open_in_new), label: const Text('Lire l’article complet')),
+        const SizedBox(height: 14),
+        Text('Les résumés sont générés automatiquement. Vérifie toujours les informations importantes auprès de la source originale.', style: TextStyle(color: Colors.blueGrey.shade500, fontSize: 11, height: 1.4)),
       ]),
     );
   }
