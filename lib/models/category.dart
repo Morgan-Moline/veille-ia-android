@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class VeilleCategory {
-  const VeilleCategory({required this.name, required this.shortName, required this.description, required this.color, required this.secondary, required this.icon, required this.imageUrl, required this.eyebrow});
+  const VeilleCategory({required this.name, required this.shortName, required this.description, required this.color, required this.secondary, required this.icon, required this.imageKey, required this.eyebrow});
   final String name, shortName, description, imageKey, eyebrow;
   final Color color, secondary;
   final IconData icon;
