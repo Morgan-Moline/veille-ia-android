@@ -8,19 +8,18 @@ class CategoryArtwork extends StatelessWidget {
   final String imageKey;
   final BoxFit fit;
 
-  static final Future<Map<String, Uint8List>> _images = _loadImages();
+  static final Map<String, Future<Uint8List>> _cache = {};
 
-  static Future<Map<String, Uint8List>> _loadImages() async {
-    final raw = await rootBundle.loadString('assets/data/category_images.json');
-    final decoded = jsonDecode(raw) as Map<String, dynamic>;
-    return decoded.map((key, value) => MapEntry(key, base64Decode(value as String)));
+  static Future<Uint8List> _loadImage(String key) async {
+    final raw = await rootBundle.loadString('assets/data/category_${key}.txt');
+    return base64Decode(raw);
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder<Map<String, Uint8List>>(
-    future: _images,
+  Widget build(BuildContext context) => FutureBuilder<Uint8List>(
+    future: _cache.putIfAbsent(imageKey, () => _loadImage(imageKey)),
     builder: (context, snapshot) {
-      final bytes = snapshot.data?[imageKey];
+      final bytes = snapshot.data;
       if (bytes == null) return const ColoredBox(color: Color(0xFFE8EEF4));
       return Image.memory(bytes, fit: fit, gaplessPlayback: true);
     },
