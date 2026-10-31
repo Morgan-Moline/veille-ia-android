@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return list;
   }
 
-  VeilleCategory _categoryFor(String name) => veilleCategories.where((c) => c.name == name).firstOrNull ?? veilleCategories.first;
+  VeilleCategory _categoryFor(String name) {\n    for (final category in veilleCategories) {\n      if (category.name == name) return category;\n    }\n    return veilleCategories.first;\n  }
   String _dateLabel(DateTime? date) {
     if (date == null) return 'Date non disponible';
     return MaterialLocalizations.of(context).formatMediumDate(date.toLocal());
