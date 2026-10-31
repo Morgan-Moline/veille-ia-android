@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/category.dart';
 import '../models/veille_article.dart';
 import '../services/veille_service.dart';
+import '../widgets/category_artwork.dart';
 import 'article_detail_screen.dart';
 import 'quiz_screen.dart';
 
@@ -274,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final color = selected?.color ?? const Color(0xFF16324F);
     final images = selected == null ? veilleCategories : [selected];
     return Container(height: 142, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(22)), clipBehavior: Clip.antiAlias, child: Stack(children: [
-      Positioned.fill(child: Row(children: images.map((c) => Expanded(child: Image.network(c.imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const SizedBox()))).toList())),
+      Positioned.fill(child: Row(children: images.map((c) => Expanded(child: CategoryArtwork(imageKey: c.imageKey, fit: BoxFit.cover))).toList())),
       Positioned.fill(child: DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(colors: [color.withOpacity(.94), color.withOpacity(.55), color.withOpacity(.18)])))),
       Padding(padding: const EdgeInsets.all(18), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [
         Text(selected?.eyebrow ?? 'COMPTABILITÉ • ÉTUDES • SECTEUR PRO', style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1)),
