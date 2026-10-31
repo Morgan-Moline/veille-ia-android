@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +10,7 @@ class CategoryArtwork extends StatelessWidget {
   static final Map<String, Future<Uint8List>> _cache = {};
 
   static Future<Uint8List> _loadImage(String key) async {
-    final raw = await rootBundle.loadString('assets/data/category_${key}.txt');
+    final raw = await rootBundle.loadString('assets/data/category_$key.txt');
     return base64Decode(raw);
   }
 
