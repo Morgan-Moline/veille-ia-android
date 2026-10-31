@@ -31,5 +31,5 @@ class VeilleArticle {
     .replaceAll(RegExp(r'<[^>]*>'), ' ')
     .replaceAll('&nbsp;', ' ').replaceAll('&amp;', '&')
     .replaceAll('&quot;', '"').replaceAll('&#39;', "'")
-    .replaceAll(RegExp(r'\\s+'), ' ').trim();
+    .replaceAll(RegExp(r'\s+'), ' ').trim();
 }
