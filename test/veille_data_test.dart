@@ -32,8 +32,9 @@ void main() {
   });
 
   test('category images are bundled locally', () async {
-    final raw = await rootBundle.loadString('assets/data/category_images.json');
-    final images = jsonDecode(raw) as Map<String, dynamic>;
-    expect(images.keys.toSet(), {'comptabilite', 'etudes', 'secteur_pro'});
+    for (final name in ['comptabilite', 'etudes', 'secteur_pro']) {
+      final raw = await rootBundle.loadString('assets/data/category_${name}.txt');
+      expect(raw.length, greaterThan(1000));
+    }
   });
 }
