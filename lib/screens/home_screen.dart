@@ -247,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         const SizedBox(width: 12),
         const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('VEILLE IA', style: TextStyle(fontSize: 11, letterSpacing: 1.5, fontWeight: FontWeight.w900, color: Color(0xFF64809B))),
-          Text('Ta veille, au bon endroit', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Color(0xFF16324F))),
+          Text('Ta veille, toujours à jour', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Color(0xFF16324F))),
         ])),
         IconButton(onPressed: _loading ? null : () => _refresh(), icon: const Icon(Icons.refresh_rounded)),
       ]))),
