@@ -33,7 +33,7 @@ void main() {
 
   test('category images are bundled locally', () async {
     for (final name in ['comptabilite', 'etudes', 'secteur_pro']) {
-      final raw = await rootBundle.loadString('assets/data/category_${name}.txt');
+      final raw = await rootBundle.loadString('assets/data/category_$name.txt');
       expect(raw.length, greaterThan(1000));
     }
   });
