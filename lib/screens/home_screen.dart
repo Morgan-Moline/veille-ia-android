@@ -121,17 +121,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _savePreferences();
   }
 
-  void _toggleRead(VeilleArticle article) {
-    setState(() {
-      if (_read.contains(article.link)) {
-        _read.remove(article.link);
-      } else {
-        _read.add(article.link);
-      }
-    });
-    _savePreferences();
-  }
-
   Future<void> _openArticle(VeilleArticle article) async {
     if (!_read.contains(article.link)) {
       _read.add(article.link);
