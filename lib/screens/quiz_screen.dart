@@ -106,7 +106,7 @@ class _QuizScreenState extends State<QuizScreen> {
     Wrap(spacing: 8, runSpacing: 8, children: _topics.entries.map((entry) => FilterChip(
       label: Text(entry.key),
       selected: _selectedTopics.contains(entry.key),
-      selectedColor: const Color(0xFF174A91).withOpacity(.12),
+      selectedColor: const Color(0xFF174A91).withValues(alpha: .12),
       onSelected: (selected) => setState(() {
         if (selected) { _selectedTopics.add(entry.key); } else { _selectedTopics.remove(entry.key); }
       }),
