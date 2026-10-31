@@ -185,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final query = _search.toLowerCase().trim();
     final list = _articles.where((a) {
       final categoryOk = _category == 'Toutes' || a.category == _category;
-      final filterOk = _tab == 1 || _filter == 'Favoris'
+      final filterOk = _filter == 'Favoris'
         ? _favorites.contains(a.link)
         : _filter == 'Non lus' ? !_read.contains(a.link)
         : _filter == 'Lus' ? _read.contains(a.link) : true;
