@@ -31,9 +31,9 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Article'), actions: [IconButton(onPressed: () { setState(() => _favorite = !_favorite); widget.onFavorite(); }, icon: Icon(_favorite ? Icons.bookmark : Icons.bookmark_border, color: category.color))]),
       body: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 32), children: [
-        Container(height: 150, decoration: BoxDecoration(color: category.color.withOpacity(.08), borderRadius: BorderRadius.circular(22)), clipBehavior: Clip.antiAlias, child: Stack(fit: StackFit.expand, children: [
+        Container(height: 150, decoration: BoxDecoration(color: category.color.withValues(alpha: .08), borderRadius: BorderRadius.circular(22)), clipBehavior: Clip.antiAlias, child: Stack(fit: StackFit.expand, children: [
           CategoryArtwork(imageKey: category.imageKey, fit: BoxFit.cover),
-          DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [category.color.withOpacity(.92), category.color.withOpacity(.22)]))),
+          DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [category.color.withValues(alpha: .92), category.color.withValues(alpha: .22)]))),
           Padding(padding: const EdgeInsets.all(20), child: Align(alignment: Alignment.bottomLeft, child: Text(category.shortName.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, letterSpacing: 1.2)))),
         ])),
         const SizedBox(height: 22),
@@ -50,7 +50,7 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
         ],
         if (article.summary.trim().isEmpty) ...[
           const SizedBox(height: 22),
-          Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: category.color.withOpacity(.08), borderRadius: BorderRadius.circular(16)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(padding: const EdgeInsets.all(15), decoration: BoxDecoration(color: category.color.withValues(alpha: .08), borderRadius: BorderRadius.circular(16)), child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Icon(Icons.auto_awesome, color: category.color),
             const SizedBox(width: 10),
             const Expanded(child: Text('Résumé IA en attente. Il sera ajouté lors de la prochaine actualisation de la veille.', style: TextStyle(height: 1.4))),
