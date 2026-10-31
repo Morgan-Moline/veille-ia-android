@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/veille_article.dart';
 import '../models/category.dart';
+import '../widgets/category_artwork.dart';
 
 class ArticleDetailScreen extends StatelessWidget {
   const ArticleDetailScreen({super.key, required this.article, required this.isFavorite, required this.onFavorite});
@@ -17,7 +18,7 @@ class ArticleDetailScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Article'), actions: [IconButton(onPressed: onFavorite, icon: Icon(isFavorite ? Icons.bookmark : Icons.bookmark_border, color: category.color))]),
       body: ListView(padding: const EdgeInsets.fromLTRB(20, 8, 20, 32), children: [
         Container(height: 150, decoration: BoxDecoration(color: category.color.withOpacity(.08), borderRadius: BorderRadius.circular(22)), clipBehavior: Clip.antiAlias, child: Stack(fit: StackFit.expand, children: [
-          Image.network(category.imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const SizedBox()),
+          CategoryArtwork(imageKey: category.imageKey, fit: BoxFit.cover),
           DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(begin: Alignment.centerLeft, end: Alignment.centerRight, colors: [category.color.withOpacity(.92), category.color.withOpacity(.22)]))),
           Padding(padding: const EdgeInsets.all(20), child: Align(alignment: Alignment.bottomLeft, child: Text(category.shortName.toUpperCase(), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, letterSpacing: 1.2)))),
         ])),
