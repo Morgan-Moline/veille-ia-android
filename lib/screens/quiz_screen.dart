@@ -96,8 +96,13 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget _setup() => ListView(padding: const EdgeInsets.fromLTRB(20, 30, 20, 30), children: [
     Container(height: 150, decoration: BoxDecoration(color: const Color(0xFF174A91), borderRadius: BorderRadius.circular(22)), child: const Padding(padding: EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.end, children: [Icon(Icons.school, color: Colors.white, size: 30), SizedBox(height: 10), Text('Entraînement BTS CG', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)), Text('500 questions • 10 thèmes', style: TextStyle(color: Colors.white70))]))),
     const SizedBox(height: 24),
-    const Text('Choisis ton thème', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF16324F))),
-    const SizedBox(height: 10),
+    const Text('Choisis tes thèmes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF16324F))),
+    const SizedBox(height: 8),
+    Row(children: [
+      TextButton(onPressed: () => setState(() => _selectedTopics = _topics.keys.toSet()), child: const Text('Tout sélectionner')),
+      TextButton(onPressed: () => setState(() => _selectedTopics.clear()), child: const Text('Tout retirer')),
+    ]),
+
     Wrap(spacing: 8, runSpacing: 8, children: _topics.entries.map((entry) => FilterChip(
       label: Text(entry.key),
       selected: _selectedTopics.contains(entry.key),
@@ -107,7 +112,7 @@ class _QuizScreenState extends State<QuizScreen> {
       }),
     )).toList()),
     const SizedBox(height: 18),
-    FilledButton.icon(onPressed: _selectedTopics.isEmpty ? null : _start, icon: const Icon(Icons.play_arrow), label: const Text('Démarrer une session de 10 questions'), style: FilledButton.styleFrom(backgroundColor: const Color(0xFF174A91), minimumSize: const Size.fromHeight(52))),
+    FilledButton.icon(onPressed: _selectedTopics.isEmpty ? null : _start, icon: const Icon(Icons.play_arrow), label: Text('Démarrer • ${_selectedTopics.length} thème(s)'), style: FilledButton.styleFrom(backgroundColor: const Color(0xFF174A91), minimumSize: const Size.fromHeight(52))),
   ]);
 
   Widget _result() => Center(child: Padding(padding: const EdgeInsets.all(28), child: Column(mainAxisSize: MainAxisSize.min, children: [
