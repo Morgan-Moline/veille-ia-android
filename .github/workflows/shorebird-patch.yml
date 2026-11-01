@@ -1,6 +1,11 @@
 name: Shorebird Patch Android
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/models/category.dart'
+      - '.github/workflows/shorebird-patch.yml'
   workflow_dispatch:
 
 permissions:
